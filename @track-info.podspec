@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.homepage     = package['homepage']
   s.platform     = :ios, "9.0"
 
-  s.source       = { :git => "https://github.com/terrillo/rn-apple-healthkit", :tag => "master" }
+  s.source       = { :git => "https://github.com/Luke-Gurgel/rn-apple-healthkit.git", :tag => "master" }
   s.source_files  = "RCTAppleHealthKit/*.{h,m}"
   s.requires_arc = true
 
