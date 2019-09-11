@@ -1,11 +1,11 @@
 {
-  "name": "rn-apple-healthkit",
+  "name": "RNHealthKit",
   "version": "0.6.5",
-  "description": "A React Native package for interacting with Apple HealthKit",
+  "description": "A React Native package for interacting with HealthKit",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/terrillo/rn-apple-healthkit.git"
+    "url": "git+https://github.com/Luke-Gurgel/rn-apple-healthkit.git"
   },
   "keywords": [
     "Apple",
@@ -21,7 +21,7 @@
     "url": "https://github.com/terrillo/rn-apple-healthkit/issues"
   },
   "homepage": "https://github.com/terrillo/rn-apple-healthkit",
-  "author": "Terrillo Walls",
+  "author": "Lucas Gurgel",
   "license": "MIT",
   "devDependencies": {
     "react-native": ">=0.40.0"
