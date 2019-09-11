@@ -1,6 +1,6 @@
 {
   "name": "@track-info/rn-health-kit",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Fork of rn-apple-healthkit",
   "main": "index.js",
   "directories": {
