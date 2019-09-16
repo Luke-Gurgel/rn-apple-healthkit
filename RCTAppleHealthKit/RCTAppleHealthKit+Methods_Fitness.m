@@ -10,6 +10,7 @@
 #import "RCTAppleHealthKit+Methods_Fitness.h"
 #import "RCTAppleHealthKit+Queries.h"
 #import "RCTAppleHealthKit+Utils.h"
+#import "RCTAppleHealthKit.h"
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventDispatcher.h>
@@ -385,7 +386,7 @@
                                       }];
 }
 
-- (void) fitness_subscribeToCycling: callback: (RCTResponseSenderBlock) callback {
+- (void) fitness_subscribeToCycling {
     HKObjectType *cyclingType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
     HKSampleType *cyclingSampleType = [HKSampleType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
     BOOL hasAccessToCycling = [self.healthStore authorizationStatusForType: cyclingType];
