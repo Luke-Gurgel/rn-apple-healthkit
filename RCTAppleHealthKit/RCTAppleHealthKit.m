@@ -256,15 +256,13 @@ RCT_EXPORT_METHOD(saveMindfulSession:(NSDictionary *)input callback:(RCTResponse
 }
 
 
-- (void)initializeHealthKit:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
-{
-    NSLog(@"Does this get run every time? Even if we have already gone through the process of asking permissions?");
+- (void) initializeHealthKit: (NSDictionary *) input callback: (RCTResponseSenderBlock) callback {
     self.healthStore = [[HKHealthStore alloc] init];
 
     if ([HKHealthStore isHealthDataAvailable]) {
         NSSet *writeDataTypes;
         NSSet *readDataTypes;
-        NSDictionary* permissions =[input objectForKey:@"permissions"];
+        NSDictionary* permissions = [input objectForKey:@"permissions"];
         
         if(permissions != nil){
             NSArray* readPermsArray = [permissions objectForKey:@"read"];
@@ -295,8 +293,6 @@ RCT_EXPORT_METHOD(saveMindfulSession:(NSDictionary *)input callback:(RCTResponse
                 callback(@[RCTJSErrorFromNSError(error)]);
                 return;
             } else {
-                [self fitness_subscribeToCycling];
-                
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     callback(@[[NSNull null], @true]);
                 });
