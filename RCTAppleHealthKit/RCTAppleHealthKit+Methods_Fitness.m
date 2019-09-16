@@ -388,7 +388,7 @@
 - (void) fitness_subscribeToCycling: callback: (RCTResponseSenderBlock) callback {
     HKObjectType *cyclingType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
     HKSampleType *cyclingSampleType = [HKSampleType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
-    BOOL hasAccessToCycling = [self.hkStore authorizationStatusForType: cyclingType];
+    BOOL hasAccessToCycling = [self.healthStore authorizationStatusForType: cyclingType];
     __block BOOL hasExecutedQuery = false;
     
     if (hasAccessToCycling) {
@@ -420,8 +420,14 @@
             }
             
             if (addedObjects) {
-                for (HKSample *sample in addedObjects) {
-                    // send added samples to RN
+                for (HKQuantitySample *sample in sampleObjects) {
+                    if (@available(iOS 12.0, *)) { NSLog(@"count: %ld", (long)sample.count); } // 1 how many quantities are there in this HKQuantitySample
+                    NSLog(@"UUID: %@", sample.UUID); // A6E324B0-AF98-4E2D-82BE-F628566F6728
+                    NSLog(@"sampleType: %@", sample.sampleType); // HKQuantityTypeIdentifierDistanceCycling
+                    NSLog(@"quantity: %@", sample.quantity); // 2 mi
+                    NSLog(@"startDate: %@", sample.startDate); // Fri Sep 13 14:06:00 2019
+                    NSLog(@"endDate: %@", sample.endDate); // Fri Sep 13 14:06:00 2019
+                    NSLog(@"metadata: %@", sample.metadata); // { HKWasUserEntered = 1 }
                 }
             }
             
@@ -438,14 +444,14 @@
             
             completionHandler();
             if (!hasExecutedQuery) {
-                [self.hkStore executeQuery: cyclingAnchoredQuery];
+                [self.healthStore executeQuery: cyclingAnchoredQuery];
                 hasExecutedQuery = true;
             }
         }];
         
-        [self.hkStore executeQuery: cyclingObserverQuery];
+        [self.healthStore executeQuery: cyclingObserverQuery];
         
-        [self.hkStore enableBackgroundDeliveryForType: cyclingType frequency: 1 withCompletion: ^(BOOL success, NSError * _Nullable error) {
+        [self.healthStore enableBackgroundDeliveryForType: cyclingType frequency: 1 withCompletion: ^(BOOL success, NSError * _Nullable error) {
             if (success == false || error != nil) {
                 NSLog(@"Error enabling background deliveries for cycling: %@", error.localizedDescription);
             }
