@@ -10,7 +10,6 @@
 #import "RCTAppleHealthKit+Methods_Fitness.h"
 #import "RCTAppleHealthKit+Queries.h"
 #import "RCTAppleHealthKit+Utils.h"
-#import "RCTAppleHealthKit.h"
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventDispatcher.h>
@@ -384,80 +383,6 @@
                                           }
                                           callback(@[[NSNull null], arr]);
                                       }];
-}
-
-- (void) fitness_subscribeToCycling {
-    HKObjectType *cyclingType = [HKObjectType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
-    HKSampleType *cyclingSampleType = [HKSampleType quantityTypeForIdentifier: HKQuantityTypeIdentifierDistanceCycling];
-    BOOL hasAccessToCycling = [self.healthStore authorizationStatusForType: cyclingType];
-    __block BOOL hasExecutedQuery = false;
-    
-    if (hasAccessToCycling) {
-        HKAnchoredObjectQuery *cyclingAnchoredQuery = [[HKAnchoredObjectQuery alloc] initWithType: cyclingSampleType predicate: nil anchor: HKAnchoredObjectQueryNoAnchor limit: HKObjectQueryNoLimit resultsHandler: ^(HKAnchoredObjectQuery * _Nonnull query, NSArray<__kindof HKSample *> * _Nullable sampleObjects, NSArray<HKDeletedObject *> * _Nullable deletedObjects, HKQueryAnchor * _Nullable newAnchor, NSError * _Nullable error) {
-            if (error) {
-                abort();
-            }
-            
-            if (sampleObjects) {
-//                RCTEventEmitter *eventEmitter = [[RCTEventEmitter alloc] init];
-//                [eventEmitter setBridge: bridge];
-//                [eventEmitter sendEventWithName: @"HK_WALKING_UPDATE" body: sampleObjects];
-                
-                for (HKQuantitySample *sample in sampleObjects) {
-                    if (@available(iOS 12.0, *)) { NSLog(@"count: %ld", (long)sample.count); } // 1 how many quantities are there in this HKQuantitySample
-                    NSLog(@"UUID: %@", sample.UUID); // A6E324B0-AF98-4E2D-82BE-F628566F6728
-                    NSLog(@"sampleType: %@", sample.sampleType); // HKQuantityTypeIdentifierDistanceCycling
-                    NSLog(@"quantity: %@", sample.quantity); // 2 mi
-                    NSLog(@"startDate: %@", sample.startDate); // Fri Sep 13 14:06:00 2019
-                    NSLog(@"endDate: %@", sample.endDate); // Fri Sep 13 14:06:00 2019
-                    NSLog(@"metadata: %@", sample.metadata); // { HKWasUserEntered = 1 }
-                }
-            }
-        }];
-        
-        cyclingAnchoredQuery.updateHandler = ^(HKAnchoredObjectQuery * _Nonnull query, NSArray<__kindof HKSample *> * _Nullable addedObjects, NSArray<HKDeletedObject *> * _Nullable deletedObjects, HKQueryAnchor * _Nullable newAnchor, NSError * _Nullable error) {
-            if (error) {
-                abort();
-            }
-            
-            if (addedObjects) {
-                for (HKQuantitySample *sample in addedObjects) {
-                    if (@available(iOS 12.0, *)) { NSLog(@"count: %ld", (long)sample.count); } // 1 how many quantities are there in this HKQuantitySample
-                    NSLog(@"UUID: %@", sample.UUID); // A6E324B0-AF98-4E2D-82BE-F628566F6728
-                    NSLog(@"sampleType: %@", sample.sampleType); // HKQuantityTypeIdentifierDistanceCycling
-                    NSLog(@"quantity: %@", sample.quantity); // 2 mi
-                    NSLog(@"startDate: %@", sample.startDate); // Fri Sep 13 14:06:00 2019
-                    NSLog(@"endDate: %@", sample.endDate); // Fri Sep 13 14:06:00 2019
-                    NSLog(@"metadata: %@", sample.metadata); // { HKWasUserEntered = 1 }
-                }
-            }
-            
-            if (deletedObjects) {
-                NSLog(@"cycling deleted samples: %@", deletedObjects);
-                // send deleted samples to RN
-            }
-        };
-        
-        HKObserverQuery *cyclingObserverQuery = [[HKObserverQuery alloc] initWithSampleType: cyclingSampleType predicate: nil updateHandler: ^(HKObserverQuery * _Nonnull query, HKObserverQueryCompletionHandler  _Nonnull completionHandler, NSError * _Nullable error) {
-            if (error) {
-                abort();
-            }
-            
-            completionHandler();
-            if (!hasExecutedQuery) {
-                [self.healthStore executeQuery: cyclingAnchoredQuery];
-                hasExecutedQuery = true;
-            }
-        }];
-        
-        [self.healthStore executeQuery: cyclingObserverQuery];
-        
-        [self.healthStore enableBackgroundDeliveryForType: cyclingType frequency: 1 withCompletion: ^(BOOL success, NSError * _Nullable error) {
-            if (success == false || error != nil) {
-                NSLog(@"Error enabling background deliveries for cycling: %@", error.localizedDescription);
-            }
-        }];
-    }
 }
 
 @end
