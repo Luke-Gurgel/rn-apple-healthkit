@@ -258,14 +258,14 @@ RCT_EXPORT_METHOD(saveMindfulSession:(NSDictionary *)input callback:(RCTResponse
 
 - (void)initializeHealthKit:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
+    NSLog(@"Does this get run every time? Even if we have already gone through the process of asking permissions?");
     self.healthStore = [[HKHealthStore alloc] init];
 
     if ([HKHealthStore isHealthDataAvailable]) {
         NSSet *writeDataTypes;
         NSSet *readDataTypes;
-
-        // get permissions from input object provided by JS options argument
         NSDictionary* permissions =[input objectForKey:@"permissions"];
+        
         if(permissions != nil){
             NSArray* readPermsArray = [permissions objectForKey:@"read"];
             NSArray* writePermsArray = [permissions objectForKey:@"write"];
@@ -275,15 +275,16 @@ RCT_EXPORT_METHOD(saveMindfulSession:(NSDictionary *)input callback:(RCTResponse
             if(readPerms != nil) {
                 readDataTypes = readPerms;
             }
+            
             if(writePerms != nil) {
                 writeDataTypes = writePerms;
             }
+
         } else {
             callback(@[RCTMakeError(@"permissions must be provided in the initialization options", nil, nil)]);
             return;
         }
 
-        // make sure at least 1 read or write permission is provided
         if(!writeDataTypes && !readDataTypes){
             callback(@[RCTMakeError(@"at least 1 read or write permission must be set in options.permissions", nil, nil)]);
             return;
@@ -294,6 +295,8 @@ RCT_EXPORT_METHOD(saveMindfulSession:(NSDictionary *)input callback:(RCTResponse
                 callback(@[RCTJSErrorFromNSError(error)]);
                 return;
             } else {
+                [self fitness_subscribeToCycling];
+                
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     callback(@[[NSNull null], @true]);
                 });
@@ -338,3 +341,4 @@ RCT_EXPORT_METHOD(authorizationStatusForType:(NSString *)type
 }
 
 @end
+;
