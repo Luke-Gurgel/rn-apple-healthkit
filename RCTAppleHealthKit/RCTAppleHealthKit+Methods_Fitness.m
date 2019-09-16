@@ -420,7 +420,7 @@
             }
             
             if (addedObjects) {
-                for (HKQuantitySample *sample in sampleObjects) {
+                for (HKQuantitySample *sample in addedObjects) {
                     if (@available(iOS 12.0, *)) { NSLog(@"count: %ld", (long)sample.count); } // 1 how many quantities are there in this HKQuantitySample
                     NSLog(@"UUID: %@", sample.UUID); // A6E324B0-AF98-4E2D-82BE-F628566F6728
                     NSLog(@"sampleType: %@", sample.sampleType); // HKQuantityTypeIdentifierDistanceCycling
