@@ -1,15 +1,39 @@
 
-# React Native Apple Healthkit
-A React Native bridge module for interacting with Apple Healthkit data. Checkout the [full documentation](https://github.com/terrillo/rn-apple-healthkit/tree/master/docs)
+# React Native Healthkit
+A React Native bridge module for interacting with Apple HealthKit data. Checkout the [full documentation](https://github.com/terrillo/@track-info/rn-health-kit/tree/master/docs).
 
 ## Installation
 
-Install the [rn-apple-healthkit] package from npm:
+- `npm install @track-info/rn-health-kit --save`
 
-- Run `npm install rn-apple-healthkit --save`
-- Run `react-native link rn-apple-healthkit`
+#### react-native >= 0.60.x
 
-Update `info.plist` in your React Native project
+- `cd ios && pod install && cd ..`
+
+#### react-native <= 0.59.10
+
+- `react-native link @track-info/rn-health-kit`
+
+## Manual Installation
+
+If your project uses `react-native` >= 0.60.x and you want to install the package manually, add a `react-native.config.js` file to your project's root directory (if one doesn't exist already), and configure `@track-info/rn-health-kit` like so:
+```javascript
+module.exports = {
+  dependencies: {
+    '@track-info/rn-health-kit': {
+      platform: { ios: null }
+    }
+  }
+}
+```
+
+1. In Xcode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]` ➜ `node_modules` ➜ `@track-info/rn-health-kit` and add `RCTAppleHealthkit.xcodeproj`
+2. Still in Xcode, in the project navigator, select your project ➜ select your project's target ➜ scroll down to `Link Binary With Libraries` at the bottom ➜ Add `libRCTAppleHealthkit.a`
+
+
+## Setup
+
+1. Update `info.plist` in your React Native project
 ```
 <key>NSHealthShareUsageDescription</key>
 <string>Read and understand health data.</string>
@@ -17,16 +41,9 @@ Update `info.plist` in your React Native project
 <string>Share workout data with other apps.</string>
 ```
 
-## Manual Installation
+2. Enable Healthkit in your application's `Capabilities` tab, like so:
 
-1. Run `npm install rn-apple-healthkit --save`
-2. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-3. Go to `node_modules` ➜ `rn-apple-healthkit` and add `RCTAppleHealthkit.xcodeproj`
-4. In XCode, in the project navigator, select your project. Add `libRCTAppleHealthkit.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-5. Click `RCTAppleHealthkit.xcodeproj` in the project navigator and go the `Build Settings` tab. Make sure 'All' is toggled on (instead of 'Basic'). In the `Search Paths` section, look for `Header Search Paths` and make sure it contains both `$(SRCROOT)/../../react-native/React` and `$(SRCROOT)/../../../React` - mark both as `recursive`.
-6. Enable Healthkit in your application's `Capabilities`
 ![](https://i.imgur.com/eOCCCyv.png "Xcode Capabilities Section")
-7. Compile and run
 
 ## Get Started
 Initialize Healthkit. This will show the Healthkit permissions prompt for any read/write permissions set in the required `options` object.
@@ -50,16 +67,16 @@ let options = {
 ```
 
 ```javascript
-import AppleHealthKit from 'rn-apple-healthkit';
+import HealthKit from '@track-info/rn-health-kit';
 
-AppleHealthKit.initHealthKit(options: Object, (err: string, results: Object) => {
+HealthKit.initHealthKit(options: Object, (err: string, results: Object) => {
     if (err) {
         console.log("error initializing Healthkit: ", err);
         return;
     }
 
     // Height Example
-    AppleHealthKit.getDateOfBirth(null, (err: Object, results: Object) => {
+    HealthKit.getDateOfBirth(null, (err: Object, results: Object) => {
     if (this._handleHealthkitError(err, 'getDateOfBirth')) {
       return;
     }
@@ -78,13 +95,13 @@ AppleHealthKit.initHealthKit(options: Object, (err: string, results: Object) => 
 
 ## Changelog
 0.6.5v
-- Enable fetching basal energy [#23](https://github.com/terrillo/rn-apple-healthkit/pull/23)
-- remove checkPermission functions in order to use from PR [#69](https://github.com/terrillo/rn-apple-healthkit/pull/69)
-- Added correct link to permissions. [#73](https://github.com/terrillo/rn-apple-healthkit/pull/73)
-- Add unified way to get workouts + convert Activity Types to name + isTracked flag [#25](https://github.com/terrillo/rn-apple-healthkit/pull/25)
+- Enable fetching basal energy [#23](https://github.com/terrillo/@track-info/rn-health-kit/pull/23)
+- remove checkPermission functions in order to use from PR [#69](https://github.com/terrillo/@track-info/rn-health-kit/pull/69)
+- Added correct link to permissions. [#73](https://github.com/terrillo/@track-info/rn-health-kit/pull/73)
+- Add unified way to get workouts + convert Activity Types to name + isTracked flag [#25](https://github.com/terrillo/@track-info/rn-health-kit/pull/25)
 
 0.6.4v
-- Basal energy ([#23](https://github.com/terrillo/rn-apple-healthkit/pull/23))
+- Basal energy ([#23](https://github.com/terrillo/@track-info/rn-health-kit/pull/23))
 - Fixed issues with saving weight in the past
 - Commited the docs to increase pull request support
 - Add daily samples for:
@@ -93,7 +110,7 @@ AppleHealthKit.initHealthKit(options: Object, (err: string, results: Object) => 
   - Cycling Distance
 
 0.6.3v
-- Food and Water ([#19](https://github.com/terrillo/rn-apple-healthkit/pull/19))
+- Food and Water ([#19](https://github.com/terrillo/@track-info/rn-health-kit/pull/19))
 
 0.6.1v
 - HKQuantityTypeIdentifierActiveEnergyBurned
@@ -179,13 +196,13 @@ The available Healthkit permissions to use with `initHealthKit`
 | Weight                 | [HKQuantityTypeIdentifierBodyMass](https://developer.apple.com/reference/Healthkit/hkquantitytypeidentifierbodymass?language=objc)                                 | ✓    | ✓     |
 | BodyFatPercentage      | [HKQuantityTypeIdentifierBodyFatPercentage](https://developer.apple.com/reference/Healthkit/hkquantitytypeidentifierbodyfatpercentage?language=objc)                                 | ✓    | ✓     |
 
-These permissions are exported as constants of the `rn-apple-healthkit` module.
+These permissions are exported as constants of the `@track-info/rn-health-kit` module.
 
 ```javascript
-import AppleHealthKit from 'rn-apple-healthkit';
+import HealthKit from '@track-info/rn-health-kit';
 
-// get the available permissions from AppleHealthKit.Constants object
-const PERMS = AppleHealthKit.Constants.Permissions;
+// get the available permissions from HealthKit.Constants object
+const PERMS = HealthKit.Constants.Permissions;
 
 // setup healthkit read/write permissions using PERMS
 const healthKitOptions = {
@@ -227,4 +244,4 @@ const healthKitOptions = {
 ## References
 - Apple Healthkit Documentation [https://developer.apple.com/Healthkit/](https://developer.apple.com/Healthkit/)
 
-> *This package is an original fork of [react-native-apple-Healthkit](https://github.com/GregWilson/react-native-apple-Healthkit)*
+> *This package is an original fork of [react-native-apple-Healthkit](https://github.com/terrillo/rn-apple-healthkit)*
